@@ -1,14 +1,14 @@
 
 /*
- * 	Java Game Applet Basic Structure
- *  by: Simon Gruening / ZirconCode
+ * 	Basic Game Applet Structure
+ * 
+ *  Version: 	1.0
+ *  Author: 	Simon Gruening / ZirconCode
  */
-
 
 import java.applet.*; 
 import java.awt.*; 
 import java.awt.event.*; 
-import java.util.Vector;
   
 public class Main extends Applet implements MouseMotionListener, MouseListener, KeyListener, Runnable
 {
@@ -25,7 +25,6 @@ public class Main extends Applet implements MouseMotionListener, MouseListener, 
 	
 	GameState state;
 	
-	Vector<Element> elements;
 	
 	// Setup
 	
@@ -46,6 +45,8 @@ public class Main extends Applet implements MouseMotionListener, MouseListener, 
 	    addKeyListener(this);
 		
 	    state = new GameState();
+	    state.height = bufferdim.height;
+	    state.width = bufferdim.width;
    	 	gameSetup();
 	    
 		running = true;
@@ -55,8 +56,9 @@ public class Main extends Applet implements MouseMotionListener, MouseListener, 
 	
 	public void gameSetup()
 	{
-		elements = new Vector<Element>();
-		elements.add(new Player());
+		// -- Setup Game
+		
+		// --
 	}
 	
 	// Render
@@ -73,15 +75,23 @@ public class Main extends Applet implements MouseMotionListener, MouseListener, 
         
         bufferg.setFont(MyFont);
         
-        // -- Render Game
         
-        for(int i = 0; i<elements.size(); i++)
-        	elements.get(i).render(bufferg);
         
-        // --
+        renderGame(g);
+        
         
 		g.drawImage(bufferi,0,0,this); 
     }
+	
+	public void renderGame(Graphics g)
+	{
+		// -- Render Game
+		
+		for(int i = 0; i<state.elements.size(); i++)
+			state.elements.get(i).render(bufferg);
+        
+        // --
+	}
 	
 	// Game Loop
 	
@@ -91,18 +101,23 @@ public class Main extends Applet implements MouseMotionListener, MouseListener, 
          { 
         	 long nextTick = (System.currentTimeMillis() + tickTime);
         	 
-        	 // -- Update Game State
-        	 
-        	 for(int i = 0; i<elements.size(); i++)
-             	elements.get(i).tick(state);
-        	 
-        	 // --
-        	 
+        	 updateGameLogic();
+        	
         	 while(nextTick > System.currentTimeMillis()) { /* blergh */ }
         	 repaint();
          }
     }
     
+	public void updateGameLogic()
+	{
+		// -- Update Game State
+   	 
+   	 	for(int i = 0; i<state.elements.size(); i++)
+   	 		state.elements.get(i).tick(state);
+   	 
+   	 	// --
+	}
+	
     // Teardown
     
 	public void stop() 
@@ -112,6 +127,7 @@ public class Main extends Applet implements MouseMotionListener, MouseListener, 
     
 	public void destroy() 
     { 
+		stop();
 		running = false; 
 		UpdaterThread = null; 
     }

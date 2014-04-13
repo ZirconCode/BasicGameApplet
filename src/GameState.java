@@ -1,10 +1,16 @@
+import java.util.Vector;
+
 
 public class GameState {
 
 	public int state = 0;
 	
-	// Dimensions
+	// Entities
+	public Vector<Element> elements;
 	
+	// Camera / Dimensions
+	public int height;
+	public int width;
 	
 	// Input
 	public boolean[] keyDown;
@@ -12,10 +18,11 @@ public class GameState {
 	public int mouseCoordX;
 	public int mouseCoordY;
 	
-	public void init()
+	
+	public GameState()
 	{
 		keyDown = new boolean[65535];
-		System.out.println("test");
+		elements = new Vector<Element>();
 	}
 	
 	
